@@ -4,6 +4,8 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
+
+
 const app = express()
 
 // Enable Cross-Origin Resource Sharing (CORS) middleware
@@ -25,6 +27,17 @@ app.use(express.static("public"))
 
 // Parse cookies using cookie-parser middleware
 app.use(cookieParser())
+
+//import routes
+import userRouter from './routes/user.routes.js'
+
+//routes decleration
+app.use("/api/v1/users", userRouter)
+/* 
+From here user can access all routes in user.router eg:- register, login, profile etc.
+This creates a url like => http://localhost:8000/api/v1/users/register
+*/
+
 
 export { app } 
 

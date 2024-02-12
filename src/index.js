@@ -1,12 +1,13 @@
 // Entry point 
 // We connect our database here
 
-
 import dotenv from "dotenv"
 import connectDB from "./db/index.js";
 import {app} from './app.js'
 
-// require('dotenv').config({ path: './env'})
+import {logEvent} from './logEvent.js'
+import {EventEmitter} from 'events'
+class MyEmitter extends EventEmitter {}
 
 import 'dotenv/config'
 
@@ -19,3 +20,12 @@ connectDB()
 .catch((err) => {
     console.log("MongoDB connection failed!", err)
 })
+
+//Initialize Object
+const myEmitter = new MyEmitter();
+
+//Add event listener for log event
+myEmitter.on('log', (message) => logEvent(message))
+
+//Emit Event
+myEmitter.emit('log', 'Log Event Emitted!')
