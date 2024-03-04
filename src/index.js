@@ -19,6 +19,7 @@ connectDB()
 })
 .catch((err) => {
     console.log("MongoDB connection failed!", err)
+    // console.log(err)
 })
 
 //Initialize Object

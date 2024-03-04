@@ -1,3 +1,7 @@
+/*
+This file has a function "uploadOnCloudinary(path)" which will take path
+of images as input and upload them on cloudinary
+*/
 import {v2 as cloudinary} from 'cloudinary'
 import fs from 'fs'
           
@@ -11,6 +15,7 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
     try {
         if(!localFilePath) return null
+        
         //Upload file to cloudinary
         const response = await cloudinary.uploader.upload(localFilePath,{
             resource_type: "auto"

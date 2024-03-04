@@ -10,7 +10,7 @@ sends a response back.
 
 import { asyncHandler } from "../utils/asyncHandler.js";
 import {ApiError} from "../utils/ApiError.js";
-import {User} from "../models/user.models.js";
+import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/Cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
@@ -31,7 +31,7 @@ const registerUser = asyncHandler( async (req, res) => {
 
     // 3) Check if user already exist: email, username
     //User.findOne(query) <= It will return the document that has same username or email
-    const existingUser = User.findOne({
+    const existingUser = await User.findOne({
         $or: [{ username },{ email }]
     })
     if(existingUser){
@@ -47,7 +47,8 @@ const registerUser = asyncHandler( async (req, res) => {
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar field is required")
     }
-
+    
+    console.log(avatarLocalPath)
     // 5) Upload them to cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
@@ -57,7 +58,7 @@ const registerUser = asyncHandler( async (req, res) => {
     }
 
     // 6) Create user object - create entry in db
-    const User = await User.create({
+    const user = await User.create({
         fullName,
         avatar: avatar.url,
         coverImage: coverImage?.url || "",
