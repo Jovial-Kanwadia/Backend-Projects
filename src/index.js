@@ -9,7 +9,10 @@ import {logEvent} from './logEvent.js'
 import {EventEmitter} from 'events'
 class MyEmitter extends EventEmitter {}
 
-import 'dotenv/config'
+// import 'dotenv/config'
+dotenv.config({
+    path: './.env'
+})
 
 connectDB()
 .then(() => {

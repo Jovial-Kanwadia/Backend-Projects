@@ -19,7 +19,8 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const registerUser = asyncHandler( async (req, res) => {
     // 1) Get user details from frontend
     const {fullName, email, password, username} = req.body
-    console.log("Email: ", email)
+    // console.log("\nWhat is inside req.body : ", req.body)
+    // console.log("\nWhat is inside req : ", req)
 
     // 2) Validation
     // if(fullName === ""){
@@ -42,13 +43,21 @@ const registerUser = asyncHandler( async (req, res) => {
     // req.files? <= Multer gives you access to files in the local system
     // avatar[0]?.path <= avatar's first property has an object which will give you it's path that was uploaded by multer 
     const avatarLocalPath = req.files?.avatar[0]?.path;
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    //We cannot use this method from coverImage because coverImage is optional to upload by user
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    let coverImageLocalPath;
+    if(req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0){
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+    
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "Avatar field is required")
     }
     
-    console.log(avatarLocalPath)
+    
     // 5) Upload them to cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     const coverImage = await uploadOnCloudinary(coverImageLocalPath)
@@ -82,6 +91,9 @@ const registerUser = asyncHandler( async (req, res) => {
     )
 
 })
+
+export {registerUser}
+
 //============Steps to register user=============//
 // 1) Get user details from frontend
 // 2) Validation
@@ -93,4 +105,33 @@ const registerUser = asyncHandler( async (req, res) => {
 // 8) Check if the entry in db was successful
 // 9) Return response
 
-export {registerUser}
+
+/*
+===========console.log("\nInside req.files : ",req.files)==============
+Inside req.files :  [Object: null prototype] {
+  avatar: [
+    {
+      fieldname: 'avatar',
+      originalname: 'IMG_20231015_235425_984.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: './public/temp',
+      filename: 'IMG_20231015_235425_984.jpg',
+      path: 'public\\temp\\IMG_20231015_235425_984.jpg',
+      size: 3289508
+    }
+  ],
+  coverImage: [
+    {
+      fieldname: 'coverImage',
+      originalname: 'WIN_20230912_20_25_48_Pro.jpg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      destination: './public/temp',
+      filename: 'WIN_20230912_20_25_48_Pro.jpg',
+      path: 'public\\temp\\WIN_20230912_20_25_48_Pro.jpg',
+      size: 721694
+    }
+  ]
+}
+*/
